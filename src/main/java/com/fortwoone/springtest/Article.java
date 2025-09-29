@@ -4,28 +4,24 @@ import java.util.Collection;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
-@Entity // This tells Hibernate to make a table out of this class
-public class User {
-    @Setter
-    @Getter
+import java.sql.Date;
+
+@Entity
+public class Article {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
-    @Setter
-    @Getter
-    private String name;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="user_id")
+    private User author;
 
-    @Setter
     @Getter
-    private String email;
+    private Date publishDate;
 
-    @Setter
     @Getter
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private String content;
 
     @Getter
     @OneToMany
