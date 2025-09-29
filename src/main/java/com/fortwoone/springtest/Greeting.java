@@ -1,4 +1,5 @@
 package com.fortwoone.springtest;
 
-public class Greeting {
+public record Greeting(long id, String content) {
+
 }
