@@ -1,7 +1,9 @@
 package com.fortwoone.springtest;
 
+import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,50 @@ public class DBController {
 
     @Autowired
     private OpinionRepository opinionRepository;
+
+    private long getLikeCount(Article article){
+        long count = 0;
+        Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
+        for (UserOpinion opinion: opinions){
+            if (opinion.getLiked()){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private long getDislikeCount(Article article){
+        long count = 0;
+        Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
+        for (UserOpinion opinion: opinions){
+            if (!opinion.getLiked()){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private Iterable<User> getArticleLikes(Article article){
+        List<User> users = new ArrayList<>();
+        Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
+        for (UserOpinion opinion: opinions){
+            if (opinion.getLiked()){
+                users.add(opinion.getUser());
+            }
+        }
+        return users;
+    }
+
+    private Iterable<User> getArticleDislikes(Article article){
+        List<User> users = new ArrayList<>();
+        Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
+        for (UserOpinion opinion: opinions){
+            if (!opinion.getLiked()){
+                users.add(opinion.getUser());
+            }
+        }
+        return users;
+    }
 
     @PostMapping(path="/users/add") // Map ONLY POST Requests
     public @ResponseBody String addNewUser(

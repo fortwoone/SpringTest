@@ -26,6 +26,7 @@ public class UserOpinion {
     @JoinColumn(name="article_id", nullable = false)
     private Article article;
 
+    @Getter
     @NonNull
     @Setter
     private Boolean liked;
