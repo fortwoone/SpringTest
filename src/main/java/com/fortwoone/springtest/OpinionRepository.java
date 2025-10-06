@@ -1,0 +1,10 @@
+package com.fortwoone.springtest;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface OpinionRepository extends CrudRepository<UserOpinion, Integer>{
+
+    Iterable<UserOpinion> findUserOpinionByArticle_Id(Integer articleId);
+
+    Iterable<UserOpinion> findUserOpinionByArticle_IdAndUser_Id(Integer articleId, Integer userId);
+}

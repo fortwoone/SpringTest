@@ -6,28 +6,24 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
     @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     @Setter
-    @Getter
     private String name;
 
     @Setter
-    @Getter
-    private String email;
+    private String password;
 
     @Setter
-    @Getter
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Getter
     @OneToMany
     private Collection<UserOpinion> opinions;
 }
