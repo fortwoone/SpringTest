@@ -1,5 +1,7 @@
-package com.fortwoone.springtest;
+package com.fortwoone.springtest.repositories;
 
+import com.fortwoone.springtest.model.Article;
+import com.fortwoone.springtest.model.UserOpinion;
 import org.springframework.data.repository.CrudRepository;
 
 public interface OpinionRepository extends CrudRepository<UserOpinion, Integer>{

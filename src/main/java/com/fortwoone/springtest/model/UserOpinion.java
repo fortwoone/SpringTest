@@ -1,7 +1,6 @@
-package com.fortwoone.springtest;
+package com.fortwoone.springtest.model;
 
 import jakarta.persistence.*;
-import java.util.Collection;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

@@ -5,8 +5,16 @@ import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fortwoone.springtest.model.Article;
+import com.fortwoone.springtest.model.User;
+import com.fortwoone.springtest.model.UserOpinion;
+import com.fortwoone.springtest.model.UserRole;
+import com.fortwoone.springtest.repositories.ArticleRepository;
+import com.fortwoone.springtest.repositories.OpinionRepository;
+import com.fortwoone.springtest.repositories.UserRepository;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/db")
+@RequestMapping("")
 public class DBController {
     @Autowired
     private UserRepository userRepository;
@@ -96,6 +104,7 @@ public class DBController {
         return userRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole(PUBLISHER, MODERATOR)")
     @PostMapping(path="/articles/add")
     public @ResponseBody String createArticle(
         @RequestParam Integer authorID,

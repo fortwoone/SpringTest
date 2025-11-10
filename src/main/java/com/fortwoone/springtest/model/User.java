@@ -1,4 +1,4 @@
-package com.fortwoone.springtest;
+package com.fortwoone.springtest.model;
 
 import java.util.Collection;
 
