@@ -1,5 +1,6 @@
 package com.fortwoone.springtest.controllers;
 
+import com.fortwoone.springtest.jwt.TokenGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
 public class LoginController {
     public record LoginRequest(String name, String password){}
 
@@ -28,8 +28,9 @@ public class LoginController {
         this.authMan = authMan;
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
+        System.out.println("Init login");
         Authentication authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
             request.name(), request.password()
         );
@@ -40,7 +41,7 @@ public class LoginController {
 
         HttpSession session = servletRequest.getSession();
         session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new TokenGenerator().generateJwtToken(authResponse), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
