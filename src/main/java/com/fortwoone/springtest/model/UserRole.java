@@ -1,6 +1,14 @@
 package com.fortwoone.springtest.model;
 
-public enum UserRole {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserRole implements GrantedAuthority {
     MODERATOR,
-    PUBLISHER
+    PUBLISHER;
+
+
+    @Override
+    public String getAuthority() {
+        return this.name();
+    }
 }

@@ -1,4 +1,4 @@
-package com.fortwoone.springtest;
+package com.fortwoone.springtest.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/login")
 public class LoginController {
     public record LoginRequest(String name, String password){}
 
@@ -28,7 +28,7 @@ public class LoginController {
         this.authMan = authMan;
     }
 
-    @PostMapping("/login")
+    @PostMapping("")
     public ResponseEntity<Void> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
         Authentication authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
             request.name(), request.password()
