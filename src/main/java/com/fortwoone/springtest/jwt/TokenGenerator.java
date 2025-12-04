@@ -1,22 +1,24 @@
 package com.fortwoone.springtest.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class TokenGenerator {
-    @Value("${r5a05.app.jwtSecret}")
-    private String jwtSecret;
 
-    @Value("${r5a05.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    private String jwtSecret = "trucmuchemachinchouettemarchebordeldemerdejenaimarre";
+
+    private long jwtExpirationMs = 360000;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -25,11 +27,13 @@ public class TokenGenerator {
         Date tokenCreationDate = new Date();
         Date tokenExpirationDate = new Date(tokenCreationDate.getTime() + jwtExpirationMs);
 
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
-                .setIssuedAt(tokenCreationDate)
-                .setExpiration(tokenExpirationDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .subject((userPrincipal.getUsername()))
+                .issuedAt(tokenCreationDate)
+                .expiration(tokenExpirationDate)
+                .signWith(key)
                 .compact();
     }
 }

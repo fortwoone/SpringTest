@@ -1,29 +1,37 @@
 package com.fortwoone.springtest.jwt;
 
-import io.jsonwebtoken.*;
+import javax.crypto.SecretKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class TokenValidator {
     private static final Logger logger = LoggerFactory.getLogger(TokenValidator.class);
-    private final String jwtSecret;
+    private final SecretKey key;
 
-    @Autowired
-    public TokenValidator(@Value("${r5a05.app.jwtSecret}") String _jwtSecret) {
-        this.jwtSecret = _jwtSecret;
+    public TokenValidator() {
+        String _jwtSecret = "trucmuchemachinchouettemarchebordeldemerdejenaimarre";
+        this.key = Keys.hmacShaKeyFor(_jwtSecret.getBytes());
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());

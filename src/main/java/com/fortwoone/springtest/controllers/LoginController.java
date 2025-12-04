@@ -31,7 +31,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
         System.out.println("Init login");
-        Authentication authRequest = UsernamePasswordAuthenticationToken.unauthenticated(
+        Authentication authRequest = new UsernamePasswordAuthenticationToken(
             request.name(), request.password()
         );
         Authentication authResponse = this.authMan.authenticate(authRequest);
@@ -39,8 +39,6 @@ public class LoginController {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authResponse);
 
-        HttpSession session = servletRequest.getSession();
-        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
         return new ResponseEntity<>(new TokenGenerator().generateJwtToken(authResponse), HttpStatus.OK);
     }
 

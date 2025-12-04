@@ -31,10 +31,10 @@ public class R505WebSecurityConfigurer {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/bonjour").permitAll()
-                        .requestMatchers("/articles/all").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/users/add").permitAll()
+                        .requestMatchers("/login", "/articles/all", "/bonjour", "/users/add").permitAll()
+//                        .requestMatchers("/bonjour").permitAll()
+//                        .requestMatchers("/articles/all").permitAll()
+//                        .requestMatchers("/users/add").permitAll()
                         .anyRequest().authenticated());
 
         http.authenticationProvider(provider);
