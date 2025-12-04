@@ -1,5 +1,6 @@
 package com.fortwoone.springtest.controllers;
 
+import com.fortwoone.springtest.json_mappings.ReturnedUser;
 import com.fortwoone.springtest.model.Article;
 import com.fortwoone.springtest.model.User;
 import com.fortwoone.springtest.model.UserOpinion;
@@ -55,7 +56,7 @@ public class OpinionController {
     }
 
     @GetMapping("/likes")
-    public @ResponseBody Iterable<User> getArticleLikes(@RequestParam Article article){
+    public @ResponseBody Iterable<ReturnedUser> getArticleLikes(@RequestParam Article article){
         List<User> users = new ArrayList<>();
         Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
         for (UserOpinion opinion: opinions){
@@ -63,11 +64,12 @@ public class OpinionController {
                 users.add(opinion.getUser());
             }
         }
-        return users;
+
+        return users.stream().map(ReturnedUser::new).toList();
     }
 
     @GetMapping("/dislikes")
-    public @ResponseBody Iterable<User> getArticleDislikes(@RequestParam Article article){
+    public @ResponseBody Iterable<ReturnedUser> getArticleDislikes(@RequestParam Article article){
         List<User> users = new ArrayList<>();
         Iterable<UserOpinion> opinions = opinionRepository.findUserOpinionByArticle(article);
         for (UserOpinion opinion: opinions){
@@ -75,7 +77,7 @@ public class OpinionController {
                 users.add(opinion.getUser());
             }
         }
-        return users;
+        return users.stream().map(ReturnedUser::new).toList();
     }
 
 
