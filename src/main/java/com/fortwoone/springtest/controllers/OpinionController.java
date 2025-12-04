@@ -8,6 +8,7 @@ import com.fortwoone.springtest.repositories.OpinionRepository;
 import com.fortwoone.springtest.repositories.UserRepository;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class OpinionController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @PreAuthorize("hasAnyRole('PUBLISHER', 'MODERATOR')")
     @GetMapping("/like_count")
     public @ResponseBody long getLikeCount(@RequestParam Article article){
         long count = 0;
@@ -39,6 +41,7 @@ public class OpinionController {
         return count;
     }
 
+    @PreAuthorize("hasAnyRole('PUBLISHER', 'MODERATOR')")
     @GetMapping("/dislike_count")
     public @ResponseBody long getDislikeCount(@RequestParam Article article){
         long count = 0;
