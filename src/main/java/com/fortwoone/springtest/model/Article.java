@@ -11,12 +11,12 @@ import java.sql.Date;
 @Entity
 public class Article {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     @Getter
     @Setter
-    @OneToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
     private User author;
 

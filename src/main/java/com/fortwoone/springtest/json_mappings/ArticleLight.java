@@ -1,4 +1,6 @@
-package com.fortwoone.springtest.model;
+package com.fortwoone.springtest.json_mappings;
+
+import com.fortwoone.springtest.model.Article;
 
 import java.sql.Date;
 

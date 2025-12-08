@@ -1,4 +1,7 @@
-package com.fortwoone.springtest.model;
+package com.fortwoone.springtest.json_mappings;
+
+import com.fortwoone.springtest.model.Article;
+import com.fortwoone.springtest.model.UserOpinion;
 
 import java.sql.Date;
 import java.util.Collection;

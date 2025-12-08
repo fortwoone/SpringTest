@@ -2,12 +2,15 @@ package com.fortwoone.springtest.controllers;
 
 import com.fortwoone.springtest.json_mappings.ArticleContent;
 import com.fortwoone.springtest.model.Article;
-import com.fortwoone.springtest.model.ArticleLight;
-import com.fortwoone.springtest.model.ReturnedArticle;
+import com.fortwoone.springtest.json_mappings.ArticleLight;
+import com.fortwoone.springtest.json_mappings.ReturnedArticle;
 import com.fortwoone.springtest.model.User;
+import com.fortwoone.springtest.model.UserRole;
 import com.fortwoone.springtest.repositories.ArticleRepository;
 import com.fortwoone.springtest.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,11 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    public record ArticleEditRequest(int articleID, String newContent){}
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -51,11 +56,41 @@ public class ArticleController {
         return "Article saved";
     }
 
-    @PreAuthorize("hasRole('MODERATOR') || hasRole('PUBLISHER') && articleRepository.findById(articleID).get().author.name == authentication.name")
+    @PreAuthorize("hasAnyRole('MODERATOR', 'PUBLISHER')")
+    @PatchMapping("/edit")
+    public @ResponseBody ResponseEntity<String> editArticle(@RequestBody ArticleEditRequest newContent){
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();;
+
+        User user = (User)auth.getDetails();
+        User foundInDB = userRepository.findById(user.getId()).orElseThrow();
+        Article corresponding = articleRepository.findById(newContent.articleID()).orElseThrow();
+
+        if (foundInDB.getRole() != UserRole.MODERATOR && !Objects.equals(foundInDB.getId(), corresponding.getAuthor().getId())){
+            return new ResponseEntity<>("Unauthorised", HttpStatus.UNAUTHORIZED);
+        }
+
+        corresponding.setContent(newContent.newContent());
+        articleRepository.save(corresponding);
+        return new ResponseEntity<>("Article edited", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('MODERATOR') || hasRole('PUBLISHER')")
     @DeleteMapping(path="/remove")
-    public @ResponseBody String deleteArticle(@RequestParam Integer articleID){
+    public @ResponseBody ResponseEntity<String> deleteArticle(@RequestParam Integer articleID){
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();;
+
+        User user = (User)auth.getDetails();
+        User foundInDB = userRepository.findById(user.getId()).orElseThrow();
+
+        Article corresponding = articleRepository.findById(articleID).orElseThrow();
+        if (foundInDB.getRole() != UserRole.MODERATOR && !Objects.equals(foundInDB.getId(), corresponding.getAuthor().getId())){
+            return new ResponseEntity<>("Unauthorised", HttpStatus.UNAUTHORIZED);
+        }
+
         articleRepository.deleteById(articleID);
-        return "Article deleted";
+        return new ResponseEntity<>("Article deleted", HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('MODERATOR') || hasRole('PUBLISHER')")

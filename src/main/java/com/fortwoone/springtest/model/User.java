@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     @Setter
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     @Setter
