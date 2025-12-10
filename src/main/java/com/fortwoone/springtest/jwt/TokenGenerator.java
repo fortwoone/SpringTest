@@ -1,15 +1,15 @@
 package com.fortwoone.springtest.jwt;
 
 import java.util.Date;
-
 import javax.crypto.SecretKey;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class TokenGenerator {

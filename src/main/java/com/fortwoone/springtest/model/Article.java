@@ -1,12 +1,12 @@
 package com.fortwoone.springtest.model;
 
+import java.sql.Date;
 import java.util.Collection;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
 
 @Entity
 public class Article {

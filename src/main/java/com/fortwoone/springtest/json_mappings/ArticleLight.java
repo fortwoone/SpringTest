@@ -1,8 +1,8 @@
 package com.fortwoone.springtest.json_mappings;
 
-import com.fortwoone.springtest.model.Article;
-
 import java.sql.Date;
+
+import com.fortwoone.springtest.model.Article;
 
 public record ArticleLight(int userId, String author, Date publishDate, String content) {
     public ArticleLight(Article a){
