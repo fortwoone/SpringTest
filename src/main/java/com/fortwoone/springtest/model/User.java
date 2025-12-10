@@ -1,7 +1,6 @@
 package com.fortwoone.springtest.model;
 
 import java.util.Collection;
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;

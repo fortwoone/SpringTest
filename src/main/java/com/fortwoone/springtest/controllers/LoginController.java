@@ -14,11 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
+    @SuppressWarnings("unused")
     public record LoginRequest(String name, String password){}
 
     private final AuthenticationManager authMan;
@@ -30,7 +30,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest){
-        System.out.println("Init login");
         Authentication authRequest = new UsernamePasswordAuthenticationToken(
             request.name(), request.password()
         );

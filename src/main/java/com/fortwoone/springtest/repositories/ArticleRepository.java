@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 // CRUD refers Create, Read, Update, Delete
 // As a result, we do not need to write anything else in here.
 
+@SuppressWarnings("unused")
 public interface ArticleRepository extends CrudRepository<Article, Integer>{
 
     Iterable<Article> findByAuthor_Id(Integer authorId);

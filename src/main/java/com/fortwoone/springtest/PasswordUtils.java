@@ -7,9 +7,4 @@ public class PasswordUtils {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
     }
-
-    public static boolean passwordMatches(String password, String storedHash){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(password, storedHash);
-    }
 }

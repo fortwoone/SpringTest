@@ -1,14 +1,14 @@
 package com.fortwoone.springtest.controllers;
 
 import com.fortwoone.springtest.json_mappings.ReturnedUser;
-import com.fortwoone.springtest.model.Article;
 import com.fortwoone.springtest.model.User;
 import com.fortwoone.springtest.model.UserOpinion;
 import com.fortwoone.springtest.repositories.ArticleRepository;
 import com.fortwoone.springtest.repositories.OpinionRepository;
 import com.fortwoone.springtest.repositories.UserRepository;
-import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,6 +23,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/articles/opinions")
 public class OpinionController {
+    @SuppressWarnings("unused")
     public record OpinionSetRequest(int articleID, Boolean liked){}
 
     @Autowired
@@ -89,7 +90,7 @@ public class OpinionController {
 
     @PreAuthorize("hasAnyRole('PUBLISHER', 'MODERATOR')")
     @PostMapping(path="/set")
-    public @ResponseBody String setArticleOpinion(
+    public @ResponseBody ResponseEntity<String> setArticleOpinion(
             @RequestBody OpinionSetRequest request
     ){
         SecurityContext context = SecurityContextHolder.getContext();
@@ -117,6 +118,6 @@ public class OpinionController {
             next.setLiked(request.liked());
             opinionRepository.save(next);
         }
-        return "Opinion set for article";
+        return new ResponseEntity<>("Opinion set for article", HttpStatus.OK);
     }
 }

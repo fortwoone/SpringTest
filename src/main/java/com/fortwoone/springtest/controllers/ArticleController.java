@@ -26,6 +26,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    @SuppressWarnings("unused")
     public record ArticleEditRequest(int articleID, String newContent){}
 
     @Autowired
@@ -36,7 +37,7 @@ public class ArticleController {
 
     @PreAuthorize("hasAnyRole('PUBLISHER', 'MODERATOR')")
     @PostMapping(path="/add")
-    public @ResponseBody String createArticle(
+    public @ResponseBody ResponseEntity<String> createArticle(
             @RequestBody ArticleContent content
     ){
         SecurityContext context = SecurityContextHolder.getContext();
@@ -53,14 +54,14 @@ public class ArticleController {
             new Date(new java.util.Date().getTime())
         );
         articleRepository.save(a);
-        return "Article saved";
+        return new ResponseEntity<>("Article saved", HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MODERATOR', 'PUBLISHER')")
     @PatchMapping("/edit")
     public @ResponseBody ResponseEntity<String> editArticle(@RequestBody ArticleEditRequest newContent){
         SecurityContext context = SecurityContextHolder.getContext();
-        Authentication auth = context.getAuthentication();;
+        Authentication auth = context.getAuthentication();
 
         User user = (User)auth.getDetails();
         User foundInDB = userRepository.findById(user.getId()).orElseThrow();
@@ -79,7 +80,7 @@ public class ArticleController {
     @DeleteMapping(path="/remove")
     public @ResponseBody ResponseEntity<String> deleteArticle(@RequestParam Integer articleID){
         SecurityContext context = SecurityContextHolder.getContext();
-        Authentication auth = context.getAuthentication();;
+        Authentication auth = context.getAuthentication();
 
         User user = (User)auth.getDetails();
         User foundInDB = userRepository.findById(user.getId()).orElseThrow();
